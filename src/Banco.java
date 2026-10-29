@@ -1,24 +1,44 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class Banco {
 
 	private String nome;
-	private List<Conta> contas;
+	private List<Conta> contas = new ArrayList<>();
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
+	public Banco(String nome) {
 		this.nome = nome;
 	}
 
-	public List<Conta> getContas() {
-		return contas;
+	public void adicionarConta(Conta conta) {
+		contas.add(conta);
 	}
 
-	public void setContas(List<Conta> contas) {
-		this.contas = contas;
+	public Optional<Conta> buscarConta(int numero) {
+		return contas.stream()
+				.filter(conta -> conta.getNumero() == numero)
+				.findFirst();
+	}
+
+	public List<Cliente> listarClientes() {
+		return contas.stream()
+				.map(Conta::getCliente)
+				.distinct()
+				.toList();
+	}
+
+	public double getSaldoTotal() {
+		return contas.stream()
+				.mapToDouble(Conta::getSaldo)
+				.sum();
 	}
 
 }
